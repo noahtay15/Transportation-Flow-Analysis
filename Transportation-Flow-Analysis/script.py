@@ -1,11 +1,9 @@
+import json
 import pandas as pd
 import folium as fol
-import os
-import requests
-import json
 
 
-map = fol.Map(location=(40, -100),
+m = fol.Map(location=(40, -100),
         control_scale=True, 
         zoom_control=False, 
         zoom_start=6)
@@ -13,13 +11,22 @@ map = fol.Map(location=(40, -100),
 with open('us-counties.json', 'r') as countiesJson:
     USCounties = json.load(countiesJson)
 
-fol.Choropleth(
+countyPopChloro = fol.Choropleth(
     geo_data=USCounties, 
     fill_opacity=0.3, 
-    line_weight=2
-).add_to(map)
+    line_weight=2, 
+    data=None, #change later
+    columns=['id', 'name'],
+    key_on='feature.id',
+    fill_color='YlGnBu', 
+    name='Population by County'
+).add_to(m)
 
+""" Add later
+stateLoadsChloro = fol.Choropleth(
+    
+).add_to(m)
+"""
 
-#downloadsDir = os.path.expanduser("~" + os.sep + "Downloads")
-#html = os.path.join(downloadsDir, "map.html")
-map.save("map.html")
+fol.LayerControl().add_to(m)
+m.save("map.html")
