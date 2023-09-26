@@ -1,10 +1,11 @@
 import json
 import pandas as pd
+import numpy as np
 import folium as fol
 import openpyxl
 
 
-populationDataframe = pd.read_excel('Somewhat Fixed 2.xlsx', sheet_name="CO-EST2022-POP", skiprows=2, usecols="C:F", nrows=3100)
+populationDataframe = pd.read_excel('Usable Data.xlsx', sheet_name="CO-EST2022-POP", skiprows=2, usecols="A, C:H", nrows=3100)
 populationDataframe.set_index('id', inplace=True)
 print(populationDataframe)
 
@@ -19,19 +20,32 @@ with open('us-counties.json', 'r') as countiesJson:
 
 
 #County Population
-for year in ['2020 Population', '2021 Population', '2022 Population']:
+fol.Choropleth(
+    geo_data=USCounties, 
+    fill_opacity=1, 
+    line_weight=2, 
+    data=populationDataframe,
+    columns=[populationDataframe.index, '2020 Population'],
+    threshold_scale=[0, 10_000, 25_000, 50_000, 100_000, 150_000, 200_000, 500_000, 1_000_000, 2_000_000, 4_000_000, 8_000_000, 10_000_000],
+    key_on='feature.id',
+    fill_color='YlGnBu', 
+    name='2020 Population by County', 
+    norm='log'
+).add_to(m)
+
+for year in ['2020-2021 Percent Change', '2021-2022 Percent Change']:
     fol.Choropleth(
         geo_data=USCounties, 
         fill_opacity=1, 
         line_weight=2, 
         data=populationDataframe,
         columns=[populationDataframe.index, year],
-        threshold_scale=[0, 50000, 100000, 150000, 200000, 10000000],
+        threshold_scale=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
         key_on='feature.id',
         fill_color='YlGnBu', 
-        name=f'{year} by County'
+        name=f'{year}', 
+        norm='log'
     ).add_to(m)
-
 
 """
 stateLoadsChloro = fol.Choropleth(
