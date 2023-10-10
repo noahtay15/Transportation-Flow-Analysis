@@ -23,14 +23,6 @@ m = fol.Map(location=(40, -100),
 with open('/workspaces/Transportation-Flow-Analysis/Prototype/us-counties.json', 'r') as countiesJson:
     USCounties = json.load(countiesJson)
 
-colorMap2020 = LinearColormap(colors=['#BFD7EA', '#3F6C7E', '#001D2F', '#90B796', '#005A11', '#FADD7D', '#724F00', '#FFDAB9', '#FF8038', '#C43200', '#FFD1D1', '#FF5959', '#B80000'], 
-    index = [0, 10_000, 25_000, 50_000, 100_000, 150_000, 200_000, 500_000, 1_000_000, 2_000_000, 4_000_000, 8_000_000, 10_000_000], 
-    vmin=0, vmax=10_000_000, 
-    caption='Population'
-)
-
-def getColor(value):
-    return colorMap2020(value)
     
 #County Population in 2020
 Choro2020 = fol.Choropleth(
@@ -43,8 +35,7 @@ Choro2020 = fol.Choropleth(
     key_on='feature.id',
     fill_color='YlOrRd', 
     name='2020 Population by County',
-    nan_fill_opacity=0
-    
+    nan_fill_opacity=0 
 )
 
 Choro2020.add_to(m)
@@ -93,4 +84,5 @@ Choro2021_2022 = fol.Choropleth(
     nan_fill_opacity=0
 ).add_to(m)
 fol.LayerControl().add_to(m)
+
 m.save("/workspaces/Transportation-Flow-Analysis/Prototype/map.html")
