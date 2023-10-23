@@ -1,9 +1,6 @@
 import json
 import pandas as pd
-import numpy as np
 import folium as fol
-import openpyxl
-from branca.colormap import LinearColormap
 
 populationDataframe = pd.read_excel('/workspaces/Transportation-Flow-Analysis/Prototype/Usable Data.xlsx', sheet_name="CO-EST2022-POP", skiprows=2, usecols="A, C:L", nrows=3100)
 populationDataframe.set_index('id', inplace=True)
@@ -12,7 +9,7 @@ populationDataframe.set_index('id', inplace=True)
 #filter dataframe by top 20 of 2020 county population
 filterTop20DF= populationDataframe.sort_values(by='2020 Population', ascending = False)
 filterTop20DF = filterTop20DF.head(20)
-print(filterTop20DF)
+#print(filterTop20DF)
 
 
 m = fol.Map(location=(40, -100),
@@ -26,7 +23,7 @@ with open('/workspaces/Transportation-Flow-Analysis/Prototype/us-counties.json',
 
     
 #County Population in 2020
-Choro2020 = fol.Choropleth(
+Choro2020Pop = fol.Choropleth(
     geo_data=USCounties, 
     fill_opacity=1, 
     line_weight=0, 
@@ -38,12 +35,11 @@ Choro2020 = fol.Choropleth(
     nan_fill_opacity=0, 
     legend_name="2020 Population by County",
     show=True
-)
+).add_to(m)
 
-Choro2020.add_to(m)
 
 #2020-2021 Percent Change
-Choro2020_2021 = fol.Choropleth(
+Choro2020_2021Perc = fol.Choropleth(
     geo_data=USCounties, 
     fill_opacity=1, 
     line_weight=2, 
@@ -59,7 +55,7 @@ Choro2020_2021 = fol.Choropleth(
 
 
 #2021-2022 Percent Change
-Choro2021_2022 = fol.Choropleth(
+Choro2021_2022Perc = fol.Choropleth(
     geo_data=USCounties, 
     fill_opacity=1, 
     line_weight=2, 
@@ -75,7 +71,7 @@ Choro2021_2022 = fol.Choropleth(
 
 
 #2020-2022 Percent Change
-Choro2021_2022 = fol.Choropleth(
+Choro2021_2022Perc = fol.Choropleth(
     geo_data=USCounties, 
     fill_opacity=1, 
     line_weight=2, 
@@ -90,7 +86,7 @@ Choro2021_2022 = fol.Choropleth(
 ).add_to(m)
 
 #2020-2021 Raw Change
-Choro2021_2022 = fol.Choropleth(
+Choro2020_2021Raw = fol.Choropleth(
     geo_data=USCounties, 
     fill_opacity=1, 
     line_weight=2, 
@@ -105,7 +101,7 @@ Choro2021_2022 = fol.Choropleth(
 ).add_to(m)
 
 #2021-2022 Raw Change
-Choro2021_2022 = fol.Choropleth(
+Choro2021_2022Raw = fol.Choropleth(
     geo_data=USCounties, 
     fill_opacity=1, 
     line_weight=2, 
@@ -120,7 +116,7 @@ Choro2021_2022 = fol.Choropleth(
 ).add_to(m)
 
 #2020-2022 Raw Change
-Choro2021_2022 = fol.Choropleth(
+Choro2020_2022Raw = fol.Choropleth(
     geo_data=USCounties, 
     fill_opacity=1, 
     line_weight=2, 
