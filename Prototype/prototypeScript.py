@@ -2,7 +2,9 @@ import json
 import pandas as pd
 import folium as fol
 
-populationDataframe = pd.read_excel('/workspaces/Transportation-Flow-Analysis/Prototype/Usable Data.xlsx', sheet_name="CO-EST2022-POP", skiprows=2, usecols="A, C:L", nrows=3100)
+populationDataframe = pd.read_csv('/workspaces/Transportation-Flow-Analysis/Prototype/Usable Data.csv')
+print(populationDataframe.info())
+    
 populationDataframe.set_index('id', inplace=True)
 print(populationDataframe)
 
@@ -26,7 +28,7 @@ with open('/workspaces/Transportation-Flow-Analysis/Prototype/us-counties.json',
 Choro2020Pop = fol.Choropleth(
     geo_data=USCounties, 
     fill_opacity=1, 
-    line_weight=0, 
+    line_weight=1, 
     data=populationDataframe,
     columns=[populationDataframe.index, '2020 Population'],
     key_on='feature.id',
@@ -37,15 +39,15 @@ Choro2020Pop = fol.Choropleth(
     show=True
 ).add_to(m)
 
-
+"""
 for s in Choro2020Pop.geojson.data['features']:
     print(s)
     s['properties']['2020 Population by County'] = populationDataframe.loc[s['id'], '2020-2021 Percent Change']
 
 fol.GeoJsonTooltip(['County Name', '2020 Population']).add_to(Choro2020Pop.geojson)
+"""
 
-
-    
+  
 #County Population in 2020 of top 20 counties
 Choro2020PopTop20 = fol.Choropleth(
     geo_data=USCounties, 
