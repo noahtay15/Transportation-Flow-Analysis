@@ -3,15 +3,15 @@ import pandas as pd
 import folium as fol
 
 populationDataframe = pd.read_csv('/workspaces/Transportation-Flow-Analysis/Prototype/Usable Data.csv')
-print(populationDataframe.info())
+#print(populationDataframe.info())
     
 populationDataframe.set_index('id', inplace=True)
-print(populationDataframe)
+#print(populationDataframe)
 
 #filter dataframe by top 20 of 2020 county population
 filterTop20DF= populationDataframe.sort_values(by='2020 Population', ascending = False)
 filterTop20DF = filterTop20DF.head(20)
-print(filterTop20DF)
+#print(filterTop20DF)
 
 
 m = fol.Map(location=(40, -100),
@@ -23,46 +23,19 @@ m = fol.Map(location=(40, -100),
 with open('/workspaces/Transportation-Flow-Analysis/Prototype/us-counties.json', 'r') as countiesJson:
     USCounties = json.load(countiesJson)
 
+
+
+"""The next lines all the way to Choro2020PopTop20.add_to(m) are how
+    to add tooltips to choropleths"""
+
 with open('/workspaces/Transportation-Flow-Analysis/Prototype/top20us-counties.json', 'r') as top20countiesJson:
     Top20USCounties = json.load(top20countiesJson)
-
-"""
-#County Population in 2020
-Choro2020Pop = fol.Choropleth(
-    geo_data=USCounties, 
-    fill_opacity=1, 
-    line_weight=1, 
-    data=populationDataframe,
-    columns=[populationDataframe.index, '2020 Population'],
-    key_on='feature.id',
-    fill_color='YlOrRd',
-    name='2020 Population by County',
-    nan_fill_opacity=0,
-    legend_name="2020 Population by County",
-    show=True
-)
-
-for s in Choro2020Pop.geojson.data['features']:
-    print(s)
-    feature_id = int(s['id'])  # Convert the GeoJSON id to an integer
-    s['properties']['2020 Population by County'] = populationDataframe.loc[feature_id, '2020-2021 Percent Change']
-
-
-for s in Choro2020Pop.geojson.data['features']:
-    print(s)
-    s['properties']['2020 Population by County'] = populationDataframe.loc[s['id'], '2020-2021 Percent Change']
-
-fol.GeoJsonTooltip(['County Name', '2020 Population']).add_to(Choro2020Pop.geojson)
-
-Choro2020Pop.add_to(m)
-"""
-
 
 #County Population in 2020 of top 20 counties
 Choro2020PopTop20 = fol.Choropleth(
     geo_data=Top20USCounties, 
     fill_opacity=1, 
-    line_weight=0, 
+    line_weight=0.5, 
     data=filterTop20DF,
     columns=[filterTop20DF.index, '2020 Population'],
     key_on='feature.id',
@@ -76,15 +49,11 @@ Choro2020PopTop20 = fol.Choropleth(
 for s in Choro2020PopTop20.geojson.data['features']:
     #print(s)
     feature_id = int(s['id'])  # Convert the GeoJSON id to an integer
-    s['properties']['2020 Population by County'] = filterTop20DF.loc[feature_id, '2020 Population']
+    s['properties']['2020 Population'] = int(filterTop20DF.loc[feature_id, '2020 Population'])
+    s['properties']['County Name'] = str(filterTop20DF.loc[feature_id, 'County Name'])
 
-"""
-for s in Choro2020PopTop20.geojson.data['features']:
-    print(s)
-    s['properties']['2020 Population by County'] = populationDataframe.loc[s['id'], '2020 Population']
-"""
+
 fol.GeoJsonTooltip(['County Name', '2020 Population']).add_to(Choro2020PopTop20.geojson)
-
 Choro2020PopTop20.add_to(m)
 
 
@@ -103,13 +72,7 @@ Choro2020_2021Perc = fol.Choropleth(
     show=False
 ).add_to(m)
 
-"""
-for s in Choro2020Pop.geojson.data['features']:
-    print(s)
-    s['properties']['2020 Population by County'] = filterTop20DF.loc[s['id'], '2020-2021 Percent Change']
 
-fol.GeoJsonTooltip(['County Name', '2020-2021 Percent Change']).add_to(Choro2020_2021Perc.geojson)
-"""
 
 #2021-2022 Percent Change
 Choro2021_2022Perc = fol.Choropleth(
