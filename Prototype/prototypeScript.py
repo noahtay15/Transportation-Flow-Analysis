@@ -37,16 +37,21 @@ Choro2020Pop = fol.Choropleth(
     nan_fill_opacity=0,
     legend_name="2020 Population by County",
     show=True
-).add_to(m)
+)
 
-"""
+for s in Choro2020Pop.geojson.data['features']:
+    print(s)
+    feature_id = int(s['id'])  # Convert the GeoJSON id to an integer
+    s['properties']['2020 Population by County'] = populationDataframe.loc[feature_id, '2020-2021 Percent Change']
+
+
 for s in Choro2020Pop.geojson.data['features']:
     print(s)
     s['properties']['2020 Population by County'] = populationDataframe.loc[s['id'], '2020-2021 Percent Change']
 
 fol.GeoJsonTooltip(['County Name', '2020 Population']).add_to(Choro2020Pop.geojson)
-"""
 
+Choro2020Pop.add_to(m)
   
 #County Population in 2020 of top 20 counties
 Choro2020PopTop20 = fol.Choropleth(
