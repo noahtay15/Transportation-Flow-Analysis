@@ -4,6 +4,6 @@ TODO:
 """
 
 
-class database_manipulator():
+class DatabaseManipulator():
     def __init__(self):
-        return 0
+        

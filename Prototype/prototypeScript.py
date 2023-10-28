@@ -59,7 +59,7 @@ Choro2020PopTop20 = fol.Choropleth(
     nan_fill_opacity=0, 
     legend_name="2020 Population by County top 20",
     show=True
-).add_to(m)
+)
 
 for s in Choro2020PopTop20.geojson.data['features']:
     #print(s)
