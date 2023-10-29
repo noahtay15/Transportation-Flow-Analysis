@@ -3,7 +3,7 @@ TODO:
 """
 import sqlite3 as sql
 
-class DatabaseManipulator():
+class DBManipulator():
     def __init__(self, path):
         
         """
