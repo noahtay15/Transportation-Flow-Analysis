@@ -1,12 +1,13 @@
 """
 TODO: 
-    - EVERYTHING
+    - all map-making methods
 """
 import os
 import json
 import csv
 import sys
 from DBManipulator import DBManipulator
+from MapMaker import MapMaker
 import pandas as pd
 import openpyxl
 
@@ -18,11 +19,19 @@ def main():
     current_directory = os.getcwd()
     #print("Current working directory:", current_directory) #/workspaces/Transportation-Flow-Analysis/Transportation Flow Analysis
     
-    databaseFile = current_directory + "/data/input/database.db"
-    db = DBManipulator(databaseFile)
+    #accessing database file
+    db = DBManipulator(current_directory)
+
+    #instantiating MapMaker object
+    mapMaker = MapMaker()
 
 
-    
+    db.close_con()
+
+
+
+
+
     """
     #Inserting the KMA table
     csv.field_size_limit(sys.maxsize)
@@ -165,6 +174,6 @@ def main():
     db.fill_table("INSERT INTO counties (id, name, geometry) VALUES (?, ?, ?)", tableData)
     print(db.fetch_data("SELECT * FROM counties"))
     """
-    db.close_con()
+    
 
 main()
