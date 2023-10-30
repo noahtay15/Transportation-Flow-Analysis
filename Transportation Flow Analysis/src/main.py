@@ -7,6 +7,8 @@ import json
 import csv
 import sys
 from DBManipulator import DBManipulator
+import pandas as pd
+import openpyxl
 
 def main():
     #Changing the working directory
@@ -18,9 +20,12 @@ def main():
     
     databaseFile = current_directory + "/data/input/database.db"
     db = DBManipulator(databaseFile)
+
+
     
+    """
+    #Inserting the KMA table
     csv.field_size_limit(sys.maxsize)
-    
     data=[]
     with open(current_directory + "/data/input/geo_kma.csv", 'r', newline='') as file:
         csv_reader = csv.reader(file)
@@ -30,8 +35,9 @@ def main():
             # Convert row elements to a tuple and append to the list
             data_tuple = tuple(row)
             data.append(data_tuple)
+        
+    data = sorted(data, key=lambda x: x[0])    
      
-           
     third_element_dict = {}
 
     # Loop through the list of tuples
@@ -49,17 +55,100 @@ def main():
             # If it's not a duplicate, add it to the dictionary with the associated tuple
             third_element_dict[third_element] = data_tuple
             
-    modified_list = [(t[2], t[1], t[0]) for t in data] #id, kma_name, kma, geometry
+    modified_list = [(t[2], t[1], t[0], t[3]) for t in data] #id, kma_name, kma, geometry
     
     for row in modified_list: 
         print(row[0] + ' ' + row[1] + ' ' + row[2])
-        
-    fullKMAData = [] #the list of tuple to be put into the KMA table
+
+     
+    
     #read excel file, fill in the list of tuple with all the data, create table, fill in table  
-        
+    
+    dataFrame = pd.read_excel(current_directory + "/data/input/KMA_and_County_Data_FINAL_Rev2.xlsx", sheet_name="Combined KMA", usecols="A:S")
+    elem = [t[1] for t in modified_list]
+    new_col = pd.DataFrame({'kma': elem})
+    dataFrame = pd.concat([dataFrame.iloc[:, :2], new_col, dataFrame.iloc[:, 2:]], axis=1)
+    elem = [t[3] for t in modified_list]
+    dataFrame['geometry'] = elem
+    dataFrame = dataFrame.sort_values(by='id', ascending=True)
+    print(dataFrame)
+    print(dataFrame.info())
     #db.execute_command("")
+
+    fullKMAData = [] #the list of tuple to be put into the KMA table
+    for index, row in dataFrame.iterrows():
+        processed_row = []
+        for column_name, value in row.items():
+            if column_name == 'id' or column_name == 'Sum of 2020 Population' or column_name == 'Sum of 2021 Population' or column_name == 'Sum of 2022 Population' or column_name == 'KMA Population Change 2020-2021' or column_name == 'KMA Population Change 2021-2022' or column_name == 'KMA Population Change 2020-2022' or column_name == 'Population Absolute Value Change 2020-2022' or column_name == 'KMA Freight Change 2020-2021' or column_name == 'KMA Freight Change 2021-2022' or column_name == 'KMA Freight Change 2020-2022' or column_name == 'Freight Absolute Value Change 2020-2022':
+                processed_row.append(int(value))
+            elif column_name == 'kma_name' or column_name == 'kma' or column_name == 'geometry':
+                processed_row.append(str(value))
+            elif column_name == 'KMA Population Percent Change 2020-2021' or column_name == "KMA Population Percent  Change 2021-2022" or column_name == 'KMA Population Percent Change 2020-2022' or column_name == 'KMA Freight Percent Change 2020-2021' or column_name == 'KMA Freight Percent Change 2021-2022' or column_name == 'KMA Freight Percent Change 2020-2022':
+                processed_row.append(float(value))
+            
+        fullKMAData.append(tuple(processed_row))
+
+    for t in fullKMAData:
+        tupNoGeo = t[:-1]
+        print(*tupNoGeo)
+
+    
+    db.execute_command("DROP TABLE IF EXISTS KMAs")
+    
+    db.execute_command('''CREATE TABLE KMAs (
+                       id INTEGER PRIMARY KEY, 
+                       kma TEXT, 
+                       kma_name TEXT, 
+                       population_2020 INTEGER, 
+                       population_2021 INTEGER, 
+                       population_2022 INTEGER, 
+                       Pop_Chan_2020_2021 INTEGER, 
+                       Pop_Perc_Chan_2020_2021 REAL,
+                       Pop_Chan_2021_2022 INTEGER,
+                       Pop_Perc_Chan_2021_2022 REAL,
+                       Pop_Chan_2020_2022 INTEGER,
+                       Pop_Perc_Chan_2020_2022 REAL,
+                       Pop_Abs_Val_Chan_2020_2022 INTEGER,
+                       Fre_Chan_2020_2021 INTEGER,
+                       Fre_Perc_Chan_2020_2021 REAL,
+                       Fre_Chan_2021_2022 INTEGER,
+                       Fre_Perc_Chan_2021_2022 REAL,
+                       Fre_Chan_2020_2022 INTEGER,
+                       Fre_Perc_Chan_2020_2022 REAL,
+                       Fre_Abs_Val_Chan_2020_2022 INTEGER,
+                       geometry TEXT
+                       )''')
     
     
+    db.fill_table('''INSERT INTO KMAs (
+                  id, 
+                  kma, 
+                  kma_name, 
+                  population_2020, 
+                  population_2021, 
+                  population_2022, 
+                  Pop_Chan_2020_2021, 
+                  Pop_Perc_Chan_2020_2021, 
+                  Pop_Chan_2021_2022, 
+                  Pop_Perc_Chan_2021_2022, 
+                  Pop_Chan_2020_2022,
+                  Pop_Perc_Chan_2020_2022, 
+                  Pop_Abs_Val_Chan_2020_2022, 
+                  Fre_Chan_2020_2021,
+                  Fre_Perc_Chan_2020_2021, 
+                  Fre_Chan_2021_2022, 
+                  Fre_Perc_Chan_2021_2022, 
+                  Fre_Chan_2020_2022,
+                  Fre_Perc_Chan_2020_2022, 
+                  Fre_Abs_Val_Chan_2020_2022, 
+                  geometry)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 ''', fullKMAData)
+    
+
+    print(db.fetch_data('SELECT id, kma, kma_name, Fre_Chan_2020_2022 FROM KMAs'))
+    """
+
     """
     Filling counties table
     with open(current_directory + "/data/input/us-counties.json", "r") as file:
