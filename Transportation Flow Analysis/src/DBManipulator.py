@@ -45,7 +45,7 @@ class DBManipulator():
         res = self.cur.execute(command)
         return res.fetchall()
     
-    def fetch_counties(self):
+    def fetch_county_lines(self):
         """
         Fetches the results of an SQL query to get the id, name, and geometry of the counties
 
@@ -56,11 +56,241 @@ class DBManipulator():
         res = self.cur.execute("SELECT * FROM counties")
         return res.fetchall()
 
-    def fetch_KMA_Pop2020(self):
+    def fetch_KMA_lines(self):
+        """
+        Fetches the id, kma, kma_name, and geometry for the KMAs
+
+        Returns: 
+            list of tuples: A list of tuples containing the id, kma, kma_name, and geometry
+        """
+        res = self.cur.execute("SELECT id, kma, kma_name, geometry FROM KMAs")
+
+    def fetch_KMA_Top20(self):
+        """
+        Fetches the id, kma, kma_name, and geometry for the top 20 KMAs
+            by Absolute Value Change in Population from 2020-2022
         
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, and geometry
+        """
+        res = self.cur.execute('''SELECT id, kma, kma_name, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+    
+    def fetch_KMA_Top20_2020_Population(self):
+        """
+        Fetches the id, kma, kma_name, 2020 population, and geometry 
+            for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, population_2020, and geometry
+        """
+        res = self.cur.execute('''SELECT id, kma, kma_name, population_2020, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+    
+    def fetch_KMA_Top20_2021_Population(self):
+        """
+        Fetches the id, kma, kma_name, 2021 population, and geometry 
+            for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, population_2021, and geometry
+        """
+        res = self.cur.execute('''SELECT id, kma, kma_name, population_2021, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+    
+    def fetch_KMA_Top20_2022_Population(self):
+        """
+        Fetches the id, kma, kma_name, 2022 population, and geometry 
+            for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, population_2022, and geometry
+        """
+        res = self.cur.execute('''SELECT id, kma, kma_name, population_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+
+
+    def fetch_KMA_Top20_Pop_Perc_Chan_2020_2021(self):
+       """
+        Fetches the id, kma, kma_name, population percent change from 2020-2021, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Pop_Perc_Chan_2020_2021, and geometry
+        """
+       res = self.cur.execute('''SELECT id, kma, kma_name, Pop_Perc_Chan_2020_2021, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+       return res.fetchall()
+
+    def fetch_KMA_Top20_Pop_Per_Chan_2021_2022(self):
+        """
+        Fetches the id, kma, kma_name, population percent change from 2021-2022, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Pop_Perc_Chan_2021_2022, and geometry
+        """
+        res = self.cur.execute('''SELECT id, kma, kma_name, Pop_Perc_Chan_2021_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+    
+    def fetch_KMA_Top20_Pop_Per_Chan_2020_2022(self):
+        """
+        Fetches the id, kma, kma_name, population percent change from 2020-2022, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Pop_Perc_Chan_2020_2022, and geometry
+        """
+        res = self.cur.execute('''SELECT id, kma, kma_name, Pop_Perc_Chan_2020_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+
+    def fetch_KMA_Top20_Pop_Chan_2020_2021(self):
+        """
+        Fetches the id, kma, kma_name, population change from 2020-2021, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Pop_Chan_2020_2021, and geometry
+        """
+        res = self.cur.execute('''SELECT id, kma, kma_name, Pop_Chan_2020_2021, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''') 
+        return res.fetchall()
+
+    def fetch_KMA_Top20_Pop_Chan_2021_2022(self):
+        """
+        Fetches the id, kma, kma_name, population change from 2021-2022, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Pop_Chan_2021_2022, and geometry
+        """
+        res = self.cur.execute('''SELECT id, kma, kma_name, Pop_Chan_2021_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+    
+    def fetch_KMA_Top20_Pop_Chan_2020_2022(self):
+        """
+        Fetches the id, kma, kma_name, population change from 2020-2022, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Pop_Chan_2020_2022, and geometry
+        """
+        res = self.cur.execute('''SELECT id, kma, kma_name, Pop_Chan_2020_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+
+    def fetch_KMA_Top20_Fre_Perc_Chan_2020_2021(self):
+        """
+        Fetches the id, kma, kma_name, freight percent change from 2020-2021, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Fre_Perc_Chan_2020_2021, and geometry
+        """ 
+        res = self.cur.execute('''SELECT id, kma, kma_name, Fre_Perc_Chan_2020_2021, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+
+    def fetch_KMA_Top20_Fre_Perc_Chan_2021_2022(self):
+        """
+        Fetches the id, kma, kma_name, freight percent change from 2021-2022, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Fre_Perc_Chan_2021_2022, and geometry
+        """ 
+        res = self.cur.execute('''SELECT id, kma, kma_name, Fre_Perc_Chan_2021_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+
+    def fetch_KMA_Top20_Fre_Perc_Chan_2020_2022(self):
+        """
+        Fetches the id, kma, kma_name, freight percent change from 2020-2022, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Fre_Perc_Chan_2020_2022, and geometry
+        """ 
+        res = self.cur.execute('''SELECT id, kma, kma_name, Fre_Perc_Chan_2020_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+    
+    def fetch_KMA_Top20_Fre_Chan_2020_2021(self):
+        """
+        Fetches the id, kma, kma_name, freight change from 2020-2021, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Fre_Chan_2020_2021, and geometry
+        """ 
+        res = self.cur.execute('''SELECT id, kma, kma_name, Fre_Chan_2020_2021, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+    
+    def fetch_KMA_Top20_Fre_Chan_2021_2022(self):
+        """
+        Fetches the id, kma, kma_name, freight change from 2021-2022, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Fre_Chan_2021_2022, and geometry
+        """ 
+        res = self.cur.execute('''SELECT id, kma, kma_name, Fre_Chan_2021_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
+
+    def fetch_KMA_Top20_Fre_Chan_2020_2022(self):
+        """
+        Fetches the id, kma, kma_name, freight change from 2020-2022, 
+            and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Fre_Chan_2020_2022, and geometry
+        """ 
+        res = self.cur.execute('''SELECT id, kma, kma_name, Fre_Chan_2020_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
+                               LIMIT 20''')
+        return res.fetchall()
 
     def fill_table(self, command, data):
-        
         """
         Execute an SQL command to insert multiple rows of data into a table.
 
