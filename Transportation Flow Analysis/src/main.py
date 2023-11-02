@@ -8,8 +8,10 @@ import csv
 import sys
 from DBManipulator import DBManipulator
 from MapMaker import MapMaker
+from DataHelper import DataHelper
 import pandas as pd
 import openpyxl
+import folium
 
 def main():
     #Changing the working directory
@@ -24,11 +26,44 @@ def main():
 
     #instantiating MapMaker object
     mapMaker = MapMaker()
+    dHelp = DataHelper()
+
+    """County Lines"""
+    #may have to just create it here instead of trying to fit into add_layer method
+    #store tuple from query in variable: result
+    #transform id and name from tuple into dataframe: dataFrame
+    #add 'data' column to dataFrame, fill with all NONE
+    #transform id, name, geometry from tuple into json: geodata
+    #pass dataFrame into dataFrame, geodata into geodata, anything into fillColor, "County Lines" into  
+
+    """KMA Lines"""
+    #store tuple from query in variable: result
+    #transform id and name from tuple into dataframe: dataFrame
+    #add 'data' column to dataFrame, fill with all NONE
+    #transform id, name, geometry from tuple into json: geodata
+    #pass dataFrame into dataFrame, geodata into geodata, anything into fillColor, "" into 
 
 
+    """KMAs 2020 Population"""
+    result = db.fetch_KMA_Top20_2020_Population() #store tuple from query in variable: result
+    dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2020") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
+    print(dataFrame)
+    print(dataFrame.info())
+    geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
+    #print(geodata)
+    #pass dataFrame into dataFrame, geodata into geodata, anything into fillColor, "Top 20 KMAs Population 2020" into name, 
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2020", nameColumn = "kma_name", isAddTooltip=True, dataColumn="Top 20 KMA Population 2020")
+    
     db.close_con()
+    
+    
+    
+    
+    m = mapMaker.get_map()
+    folium.LayerControl().add_to(m)
+    m.save(current_directory + "/data/map.html")
 
-
+    
 
 
 

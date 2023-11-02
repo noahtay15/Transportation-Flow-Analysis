@@ -26,7 +26,7 @@ class MapMaker():
             - Tiles: "Cartodb Positron" tileset
         """
         
-        self.map = fol.Map(location=(40, -100),
+        self.m = fol.Map(location=(40, -100),
                             control_scale=True, 
                             zoom_control=False, 
                             zoom_start=5, 
@@ -37,8 +37,9 @@ class MapMaker():
                             min_lat=20,
                             max_lat=52,
                             tiles="Cartodb Positron")
+        
 
-    def add_layer(self, dataFrame, geodata, dataColumn, fillColor, name, show, nameColumn):
+    def add_layer(self, dataFrame, geodata, fillColor, name, nameColumn, isAddTooltip, dataColumn):
         
         """
         Add a choropleth layer, with tooltip, to the map with specified data and
@@ -68,12 +69,16 @@ class MapMaker():
             name=name,
             nan_fill_opacity=0, 
             legend_name=name,
-            show=show
+            show=True
         )
-        
-        tooltip = self.add_tooltip(layer, dataFrame, dataColumn, nameColumn)
-        tooltip.add_to(layer.geojson)
-        layer.add_to(self.map)
+
+        if isAddTooltip:
+            tooltip = self.add_tooltip(layer, dataFrame, dataColumn, nameColumn)
+            tooltip.add_to(layer.geojson)
+            
+        self.m.add_child(layer)
+
+
 
     def add_tooltip(self, layer, dataFrame, dataColumn, nameColumn):
         
@@ -103,7 +108,7 @@ class MapMaker():
         returns self.map
         """
         
-        return self.map       
+        return self.m      
 
     def add_layer_control(self):
         """
@@ -111,4 +116,5 @@ class MapMaker():
         all the layers have been added to the map, or the layers
         may not show up correctly on the toggle tool.
         """
-        fol.LayerControl.add_to(self.map)
+        layer_control = fol.LayerControl()
+        layer_control.add_to(self.m)

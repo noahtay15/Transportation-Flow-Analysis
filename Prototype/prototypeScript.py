@@ -11,7 +11,7 @@ populationDataframe.set_index('id', inplace=True)
 #filter dataframe by top 20 of 2020 county population
 filterTop20DF= populationDataframe.sort_values(by='2020 Population', ascending = False)
 filterTop20DF = filterTop20DF.head(20)
-#print(filterTop20DF)
+print(filterTop20DF)
 max_lat = 52
 min_lat = 20
 max_lon = -60

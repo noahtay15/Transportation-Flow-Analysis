@@ -30,21 +30,6 @@ class DBManipulator():
         self.cur.execute(command)
         self.con.commit()
     
-    def fetch_data(self, command):
-        
-        """
-        Execute an SQL query and fetch the resulting data.
-
-        Args:
-            command (str): The SQL query to be executed.
-
-        Returns:
-            list of tuples: A list containing the retrieved data as tuples.
-        """
-        
-        res = self.cur.execute(command)
-        return res.fetchall()
-    
     def fetch_county_lines(self):
         """
         Fetches the results of an SQL query to get the id, name, and geometry of the counties
@@ -120,7 +105,6 @@ class DBManipulator():
                                ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
                                LIMIT 20''')
         return res.fetchall()
-
 
     def fetch_KMA_Top20_Pop_Perc_Chan_2020_2021(self):
        """
@@ -301,7 +285,22 @@ class DBManipulator():
         
         self.cur.executemany(command, data)
         self.con.commit()
+
+    def fetch_data(self, command):
         
+        """
+        Execute an SQL query and fetch the resulting data.
+
+        Args:
+            command (str): The SQL query to be executed.
+
+        Returns:
+            list of tuples: A list containing the retrieved data as tuples.
+        """
+        
+        res = self.cur.execute(command)
+        return res.fetchall()
+
     def close_con(self):
         
         """
