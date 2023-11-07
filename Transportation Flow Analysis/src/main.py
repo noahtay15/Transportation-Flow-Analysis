@@ -3,7 +3,7 @@ TODO:
     - all map-making methods
     - figure out how to hide the color scales when the layer is not active
     - edit the geometry column in the KMA table to be the correct format
-    - Percent change showing as 0 in tooltips
+    - Percent change showing as 0 in tooltips - possible format error?
 """
 import os
 from DBManipulator import DBManipulator
