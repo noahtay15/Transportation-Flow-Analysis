@@ -11,7 +11,7 @@ populationDataframe.set_index('id', inplace=True)
 #filter dataframe by top 20 of 2020 county population
 filterTop20DF= populationDataframe.sort_values(by='2020 Population', ascending = False)
 filterTop20DF = filterTop20DF.head(20)
-#print(filterTop20DF)
+print(filterTop20DF)
 max_lat = 52
 min_lat = 20
 max_lon = -60
@@ -45,7 +45,8 @@ countiesJson.close()
 with open('/workspaces/Transportation-Flow-Analysis/Prototype/top20us-counties.json', 'r') as top20countiesJson:
     Top20USCounties = json.load(top20countiesJson)
 top20countiesJson.close()
-
+print(Top20USCounties['features'][0])
+print(type(Top20USCounties))
 #County Population in 2020 of top 20 counties
 Choro2020PopTop20 = fol.Choropleth(
     geo_data=Top20USCounties, 
