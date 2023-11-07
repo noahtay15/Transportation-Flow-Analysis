@@ -45,7 +45,8 @@ countiesJson.close()
 with open('/workspaces/Transportation-Flow-Analysis/Prototype/top20us-counties.json', 'r') as top20countiesJson:
     Top20USCounties = json.load(top20countiesJson)
 top20countiesJson.close()
-
+print(Top20USCounties['features'][0])
+print(type(Top20USCounties))
 #County Population in 2020 of top 20 counties
 Choro2020PopTop20 = fol.Choropleth(
     geo_data=Top20USCounties, 

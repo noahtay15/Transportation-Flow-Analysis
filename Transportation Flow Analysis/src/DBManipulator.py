@@ -1,7 +1,6 @@
 """
 TODO:
-    - Restructure for better encapsulation
-        * Change fetch_data() into multiple fetching methods for diff types of data. Have SQL commands inside those methods
+    - Comment out the 2021-2021 and 2021-2022 methods
 """
 import sqlite3 as sql
 
@@ -49,6 +48,7 @@ class DBManipulator():
             list of tuples: A list of tuples containing the id, kma, kma_name, and geometry
         """
         res = self.cur.execute("SELECT id, kma, kma_name, geometry FROM KMAs")
+        res.fetchall()
 
     def fetch_KMA_Top20(self):
         """
@@ -107,7 +107,7 @@ class DBManipulator():
         return res.fetchall()
 
     def fetch_KMA_Top20_Pop_Perc_Chan_2020_2021(self):
-       """
+        """
         Fetches the id, kma, kma_name, population percent change from 2020-2021, 
             and geometry for the top 20 KMAs, sorted by Absolute Value Change in Population from 2020-2022
         
@@ -115,10 +115,10 @@ class DBManipulator():
             list of tuples: A list of tuples of the top 20 KMAs, containing
               the id, kma, kma_name, Pop_Perc_Chan_2020_2021, and geometry
         """
-       res = self.cur.execute('''SELECT id, kma, kma_name, Pop_Perc_Chan_2020_2021, geometry FROM KMAs
+        res = self.cur.execute('''SELECT id, kma, kma_name, Pop_Perc_Chan_2020_2021, geometry FROM KMAs
                                ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC 
                                LIMIT 20''')
-       return res.fetchall()
+        return res.fetchall()
 
     def fetch_KMA_Top20_Pop_Per_Chan_2021_2022(self):
         """

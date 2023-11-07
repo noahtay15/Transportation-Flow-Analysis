@@ -4,6 +4,7 @@ TODO:
     - Tuple to data frame
 """
 import geojson
+import json
 import pandas as pd
 
 class DataHelper:
@@ -48,23 +49,29 @@ class DataHelper:
         """
         
         features = []
+        
         #id, kma, kma_name, [data], geometry
         for row in tup_list:
-            
+              
             if "MULTIPOLYGON" in row[4]:
-                geo_type = "MULTIPOLYGON"
+                geo_type = "MultiPolygon"
                 geo_coord = row[4].replace('MULTIPOLYGON', '')
+                geo_coord = geo_coord.replace('(', '[').replace(')', ']').replace(', ', '],[').replace(' ', ',').replace('[[[', '[[').replace(']]]', ']]')
+                geo_coord = "[[" + geo_coord + "]]"
             else:
-                geo_type = "POLYGON"
+                geo_type = "Polygon"
                 geo_coord = row[4].replace('POLYGON', '')
+                geo_coord = geo_coord.replace('(', '[').replace(')', ']').replace(', ', '],[').replace(' ', ',').replace('[[[', '[[').replace(']]]', ']]')
+                geo_coord = "[" + geo_coord + "]"
                 
-            geo_coord = geo_coord.replace('(', '[').replace(')', ']')
-            geo_coord = "[" + geo_coord + "]"
-            
+            geo_coord = json.loads(geo_coord)
             feature = {
                 "type" : "Feature",
-                "id": str(row[0]),
-                "properties": {"name": row[2]},
+                "id": int(row[0]),
+                "properties": {
+                    "kma": str(row[1]),
+                    "kma_name": str(row[2]),
+                    "data_column_name" : int(row[3])},
                 "geometry": {
                     "type": geo_type,
                     "coordinates": geo_coord
@@ -78,7 +85,8 @@ class DataHelper:
         }
         
         geo_data = geojson.dumps(feature_collection)
-        return geo_data
+        parsed_geodata = json.loads(geo_data)
+        return parsed_geodata
     
     def tuple_to_dataframe(self, tup_list, data_column_name):
         """
@@ -94,7 +102,14 @@ class DataHelper:
         selected_data =[]
         for tup in tup_list:
             selected_data.append((tup[0], tup[1], tup[2], tup[3], tup[4]))
+
+            
         df = pd.DataFrame(selected_data, columns=columns)
+        
+        df['geometry'] = df['geometry'].str.replace('(', '[')
+        df['geometry'] = df['geometry'].str.replace(')', ']')
+        df['geometry'] = df['geometry'].str.replace(', ', '],[')
+        df['geometry'] = df['geometry'].str.replace(' ', ', ')
         df =df.set_index('id')
         
         return df
