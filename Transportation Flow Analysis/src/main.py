@@ -1,17 +1,13 @@
 """
 TODO: 
     - all map-making methods
+    - figure out how to hide the color scales when the layer is not active
+    - edit the geometry column in the KMA table to be the correct format
 """
 import os
-import json
-import csv
-import sys
 from DBManipulator import DBManipulator
 from MapMaker import MapMaker
 from DataHelper import DataHelper
-import pandas as pd
-import openpyxl
-import folium
 
 def main():
     #Changing the working directory
@@ -24,10 +20,14 @@ def main():
     #accessing database file
     db = DBManipulator(current_directory)
 
-    #instantiating MapMaker object
     mapMaker = MapMaker()
     dHelp = DataHelper()
 
+
+    """Noah, don't worry about the County Lines and KMA Lines map. I think there is something special that 
+        has to be done since I am filling in a choropleth with no data. I'll figure it out unless you want
+        to attempt it. -Clifton"""
+    
     """County Lines"""
     #may have to just create it here instead of trying to fit into add_layer method
     #store tuple from query in variable: result
@@ -43,28 +43,50 @@ def main():
     #transform id, name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, anything into fillColor, "" into 
 
+    
 
     """KMAs 2020 Population"""
     result = db.fetch_KMA_Top20_2020_Population() #store tuple from query in variable: result
     dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2020") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
-    print(dataFrame)
-    print(dataFrame.info())
+    m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
-    #print(geodata)
-    #pass dataFrame into dataFrame, geodata into geodata, anything into fillColor, "Top 20 KMAs Population 2020" into name, 
+    #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
     mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2020", nameColumn = "kma_name", isAddTooltip=True, dataColumn="Top 20 KMA Population 2020")
     
-    db.close_con()
-    
-    
-    
-    
+    """KMAs 2021 Population"""
+    result = db.fetch_KMA_Top20_2021_Population() #store tuple from query in variable: result
+    dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2021") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
     m = mapMaker.get_map()
-    folium.LayerControl().add_to(m)
+    geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
+    #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2021", nameColumn = "kma_name", isAddTooltip=True, dataColumn="Top 20 KMA Population 2021")
+    
+    
+    """KMAs 2022 Population"""
+    result = db.fetch_KMA_Top20_2022_Population() #store tuple from query in variable: result
+    dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2022") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
+    m = mapMaker.get_map()
+    geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
+    #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2022", nameColumn = "kma_name", isAddTooltip=True, dataColumn="Top 20 KMA Population 2022")
+    
+    
+    
+    
+    
+    
+    #The next three lines should be the very last thing called in the main method
+    m = mapMaker.get_map()
+    mapMaker.add_layer_control()
     m.save(current_directory + "/data/map.html")
+    
+    
+
 
     
 
+
+    
 
 
     """
