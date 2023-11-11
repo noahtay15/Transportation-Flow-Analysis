@@ -1,10 +1,8 @@
 """
 TODO: 
     - figure out how to hide the color scales when the layer is not active (M)
-    - edit the geometry column in the KMA table to be the correct format, add a geotype column (M)
-    - change color schemes in some of the layers (H)
-    - adjust bins for the layers (L)
-    - add 2020-2022 Pop Total Change Layer for all KMAs (H)
+    - edit the geometry column in the KMA table to be the correct format, add a geotype column (L)
+    - adjust bins for the layers (M)
     - may not need to get the map every time. check that
     - add the KMA and county lines (H)
 """
@@ -75,6 +73,13 @@ def main():
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
     mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2022", nameColumn = "kma_name", isAddTooltip=True, dataColumn="Top 20 KMA Population 2022")
     
+    """All KMAs 2020-2022 Population Change"""
+    result = db.fetch_KMAs_Pop_Chan_2020_2022()
+    dataFrame = dHelp.tuple_to_dataframe(result, "All KMA 2020-2022 Population Change") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
+    m = mapMaker.get_map()
+    geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
+    #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='Spectral', name="All KMA 2020-2022 Population Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="All KMA 2020-2022 Population Change")
     
     """KMAs 2020-2022 Population Percent Change"""
     result = db.fetch_KMA_Top20_Pop_Per_Chan_2020_2022() #store tuple from query in variable: result
@@ -82,7 +87,7 @@ def main():
     m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="KMAs 2020-2022 Population Percent Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Population Percent Change")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdYlGn', name="KMAs 2020-2022 Population Percent Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Population Percent Change")
     
     """KMAs 2020-2022 Population Total Change"""
     result = db.fetch_KMA_Top20_Pop_Chan_2020_2022() #store tuple from query in variable: result
@@ -90,7 +95,7 @@ def main():
     m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="KMAs 2020-2022 Population Total Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Population Total Change")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdYlGn', name="KMAs 2020-2022 Population Total Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Population Total Change")
     
     """KMAs 2020-2022 Freight Percent Change"""
     result = db.fetch_KMA_Top20_Fre_Perc_Chan_2020_2022() #store tuple from query in variable: result
@@ -98,7 +103,7 @@ def main():
     m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="KMAs 2020-2022 Freight Percent Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Freight Percent Change")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdBu', name="KMAs 2020-2022 Freight Percent Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Freight Percent Change")
 
     """KMAs 2020-2022 Freight Total Change"""
     result = db.fetch_KMA_Top20_Fre_Chan_2020_2022() #store tuple from query in variable: result
@@ -106,7 +111,7 @@ def main():
     m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="KMAs 2020-2022 Freight Total Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Freight Total Change")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdBu', name="KMAs 2020-2022 Freight Total Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Freight Total Change")
 
     #The next 5 lines should be the very last thing called in the main method
     mapMaker.add_watermark(current_directory)

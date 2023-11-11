@@ -49,6 +49,13 @@ class DBManipulator():
         """
         res = self.cur.execute("SELECT id, kma, kma_name, geometry FROM KMAs")
         res.fetchall()
+        
+    def fetch_KMAs_Pop_Chan_2020_2022(self):
+        """
+        """
+        
+        res=self.cur.execute("SELECT id, kma, kma_name, Pop_Chan_2020_2022, geometry FROM KMAs")
+        return res.fetchall()
 
     def fetch_KMA_Top20(self):
         """
