@@ -3,6 +3,8 @@ TODO:
 """
 
 import folium as fol
+from folium.plugins import FloatImage
+import base64
 
 class MapMaker():
     def __init__(self):
@@ -26,8 +28,7 @@ class MapMaker():
             - Tiles: "Cartodb Positron" tileset
         """
         
-        self.m = fol.Map(location=(40, -100),
-                            control_scale=True, 
+        self.m = fol.Map(location=(40, -100), 
                             zoom_control=False, 
                             zoom_start=5, 
                             min_zoom=5,
@@ -60,8 +61,9 @@ class MapMaker():
         
         layer = fol.Choropleth(
             geo_data=geodata, 
-            fill_opacity=1, 
-            line_weight=0.5, 
+            fill_opacity=0.7, 
+            line_weight=1,
+            line_opacity=1, 
             data=dataFrame,
             columns=[dataFrame.index, dataColumn],
             key_on='feature.id',
@@ -69,7 +71,7 @@ class MapMaker():
             name=name,
             nan_fill_opacity=0, 
             legend_name=name,
-            show=True
+            show=False
         )
 
         if isAddTooltip:
@@ -97,7 +99,7 @@ class MapMaker():
         
         for s in layer.geojson.data['features']:
             feature_id = int(s['id'])  # Convert the GeoJSON id to an integer
-            s['properties'][dataColumn] = int(dataFrame.loc[feature_id, dataColumn])
+            s['properties'][dataColumn] = float(dataFrame.loc[feature_id, dataColumn])
             s['properties'][nameColumn] = str(dataFrame.loc[feature_id, nameColumn])
         
         return fol.GeoJsonTooltip([nameColumn, dataColumn])
@@ -118,3 +120,18 @@ class MapMaker():
         """
         layer_control = fol.LayerControl()
         layer_control.add_to(self.m)
+        
+        
+    def add_watermark(self, directory): 
+        """
+        Adds the FreightWaves watermark to the map in the bottom left corner. Since it is a png, 
+        it must first be base64 encoded into a string.
+        
+        Args:
+            directory (string): the path of the current working directory
+        """
+        
+        with open(directory + "/data/input/FW_watermark.png", 'rb') as wm:
+            b64_content = base64.b64encode(wm.read()).decode('utf-8')
+            
+        FloatImage('data:image/png;base64,{}'.format(b64_content), bottom=5, left=0, width=100, height=25).add_to(self.m)

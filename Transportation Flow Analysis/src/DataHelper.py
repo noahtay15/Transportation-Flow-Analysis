@@ -1,7 +1,6 @@
 """
 TODO:
-    - Tuple to JSON
-    - Tuple to data frame
+- maybe remove geojson if it does not break anything
 """
 import geojson
 import json

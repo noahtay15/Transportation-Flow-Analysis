@@ -1,6 +1,6 @@
 """
 TODO:
-    - Comment out the 2021-2021 and 2021-2022 methods
+    - Comment out the 2020-2021 and 2021-2022 methods
 """
 import sqlite3 as sql
 

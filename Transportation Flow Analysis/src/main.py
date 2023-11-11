@@ -1,14 +1,18 @@
 """
 TODO: 
-    - all map-making methods
-    - figure out how to hide the color scales when the layer is not active
-    - edit the geometry column in the KMA table to be the correct format
-    - Percent change showing as 0 in tooltips - possible format error?
+    - figure out how to hide the color scales when the layer is not active (M)
+    - edit the geometry column in the KMA table to be the correct format, add a geotype column (M)
+    - change color schemes in some of the layers (H)
+    - adjust bins for the layers (L)
+    - add 2020-2022 Pop Total Change Layer for all KMAs (H)
+    - may not need to get the map every time. check that
+    - add the KMA and county lines (H)
 """
 import os
 from DBManipulator import DBManipulator
 from MapMaker import MapMaker
 from DataHelper import DataHelper
+
 
 def main():
     #Changing the working directory
@@ -17,7 +21,7 @@ def main():
     os.chdir(parent_directory)
     current_directory = os.getcwd()
     #print("Current working directory:", current_directory) #/workspaces/Transportation-Flow-Analysis/Transportation Flow Analysis
-    
+
     #accessing database file
     db = DBManipulator(current_directory)
 
@@ -28,7 +32,7 @@ def main():
     """Noah, don't worry about the County Lines and KMA Lines map. I think there is something special that 
         has to be done since I am filling in a choropleth with no data. I'll figure it out unless you want
         to attempt it. -Clifton"""
-    
+
     """County Lines"""
     #may have to just create it here instead of trying to fit into add_layer method
     #store tuple from query in variable: result
@@ -104,10 +108,12 @@ def main():
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
     mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="KMAs 2020-2022 Freight Total Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Freight Total Change")
 
-    #The next three lines should be the very last thing called in the main method
+    #The next 5 lines should be the very last thing called in the main method
+    mapMaker.add_watermark(current_directory)
     m = mapMaker.get_map()
     mapMaker.add_layer_control()
-    m.save(current_directory + "/data/map.html")
+    db.close_con()
+    m.save(current_directory + "/data/output/map.html")
     
     
 
@@ -241,7 +247,8 @@ def main():
                  ''', fullKMAData)
     
 
-    print(db.fetch_data('SELECT id, kma, kma_name, Fre_Chan_2020_2022 FROM KMAs'))
+    print(db.fetch_data('SELECT id, kma, kma_name, Pop_Perc_Chan_2020_2022 FROM KMAs'))
+    db.close_con()
     """
 
     """
