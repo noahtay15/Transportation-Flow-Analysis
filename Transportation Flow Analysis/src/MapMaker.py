@@ -40,7 +40,7 @@ class MapMaker():
                             tiles="Cartodb Positron")
         
 
-    def add_layer(self, dataFrame, geodata, fillColor, name, nameColumn, isAddTooltip, dataColumn):
+    def add_layer(self, dataFrame, geodata, fillColor, name, nameColumn, dataColumn):
         
         """
         Add a choropleth layer, with tooltip, to the map with specified data and
@@ -74,12 +74,25 @@ class MapMaker():
             show=False
         )
 
-        if isAddTooltip:
-            tooltip = self.add_tooltip(layer, dataFrame, dataColumn, nameColumn)
-            tooltip.add_to(layer.geojson)
+        tooltip = self.add_tooltip(layer, dataFrame, dataColumn, nameColumn)
+        tooltip.add_to(layer.geojson)
             
         self.m.add_child(layer)
-
+        
+        
+    def add_empty_layer(self, geodata, name):
+        layer = fol.Choropleth(
+            geo_data=geodata, 
+            fill_opacity=0.7, 
+            line_weight=1,
+            line_opacity=1,
+            key_on='feature.id',
+            name=name,
+            nan_fill_opacity=0, 
+            legend_name=name,
+            show=False
+        )
+        
 
 
     def add_tooltip(self, layer, dataFrame, dataColumn, nameColumn):

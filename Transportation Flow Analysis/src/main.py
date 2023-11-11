@@ -1,15 +1,19 @@
 """
 TODO: 
     - figure out how to hide the color scales when the layer is not active (M)
-    - edit the geometry column in the KMA table to be the correct format, add a geotype column (L)
+    - edit the geometry column in the KMA table to be the correct format, add a geotype column (H)
     - adjust bins for the layers (M)
-    - may not need to get the map every time. check that
     - add the KMA and county lines (H)
+    - fix db, round the percent change columns to one decimal (H)
 """
 import os
 from DBManipulator import DBManipulator
 from MapMaker import MapMaker
 from DataHelper import DataHelper
+
+import csv
+import sys
+import pandas as pd
 
 
 def main():
@@ -37,7 +41,8 @@ def main():
     #transform id and name from tuple into dataframe: dataFrame
     #add 'data' column to dataFrame, fill with all NONE
     #transform id, name, geometry from tuple into json: geodata
-    #pass dataFrame into dataFrame, geodata into geodata, anything into fillColor, "County Lines" into  
+    #pass dataFrame into dataFrame, geodata into geodata, anything into fillColor, "County Lines" into 
+    
 
     """KMA Lines"""
     #store tuple from query in variable: result
@@ -51,73 +56,65 @@ def main():
     """KMAs 2020 Population"""
     result = db.fetch_KMA_Top20_2020_Population() #store tuple from query in variable: result
     dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2020") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
-    m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2020", nameColumn = "kma_name", isAddTooltip=True, dataColumn="Top 20 KMA Population 2020")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2020", nameColumn = "kma_name", dataColumn="Top 20 KMA Population 2020")
     
     """KMAs 2021 Population"""
     result = db.fetch_KMA_Top20_2021_Population() #store tuple from query in variable: result
     dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2021") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
-    m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2021", nameColumn = "kma_name", isAddTooltip=True, dataColumn="Top 20 KMA Population 2021")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2021", nameColumn = "kma_name", dataColumn="Top 20 KMA Population 2021")
     
     
     """KMAs 2022 Population"""
     result = db.fetch_KMA_Top20_2022_Population() #store tuple from query in variable: result
     dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2022") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
-    m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2022", nameColumn = "kma_name", isAddTooltip=True, dataColumn="Top 20 KMA Population 2022")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2022", nameColumn = "kma_name", dataColumn="Top 20 KMA Population 2022")
     
     """All KMAs 2020-2022 Population Change"""
     result = db.fetch_KMAs_Pop_Chan_2020_2022()
     dataFrame = dHelp.tuple_to_dataframe(result, "All KMA 2020-2022 Population Change") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
-    m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='Spectral', name="All KMA 2020-2022 Population Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="All KMA 2020-2022 Population Change")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='Spectral', name="All KMA 2020-2022 Population Change", nameColumn = "kma_name", dataColumn="All KMA 2020-2022 Population Change")
     
     """KMAs 2020-2022 Population Percent Change"""
     result = db.fetch_KMA_Top20_Pop_Per_Chan_2020_2022() #store tuple from query in variable: result
     dataFrame = dHelp.tuple_to_dataframe(result, "KMAs 2020-2022 Population Percent Change") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
-    m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdYlGn', name="KMAs 2020-2022 Population Percent Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Population Percent Change")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdYlGn', name="KMAs 2020-2022 Population Percent Change", nameColumn = "kma_name", dataColumn="KMAs 2020-2022 Population Percent Change")
     
     """KMAs 2020-2022 Population Total Change"""
     result = db.fetch_KMA_Top20_Pop_Chan_2020_2022() #store tuple from query in variable: result
     dataFrame = dHelp.tuple_to_dataframe(result, "KMAs 2020-2022 Population Total Change") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
-    m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdYlGn', name="KMAs 2020-2022 Population Total Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Population Total Change")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdYlGn', name="KMAs 2020-2022 Population Total Change", nameColumn = "kma_name", dataColumn="KMAs 2020-2022 Population Total Change")
     
     """KMAs 2020-2022 Freight Percent Change"""
     result = db.fetch_KMA_Top20_Fre_Perc_Chan_2020_2022() #store tuple from query in variable: result
     dataFrame = dHelp.tuple_to_dataframe(result, "KMAs 2020-2022 Freight Percent Change") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
-    m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdBu', name="KMAs 2020-2022 Freight Percent Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Freight Percent Change")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdBu', name="KMAs 2020-2022 Freight Percent Change", nameColumn = "kma_name", dataColumn="KMAs 2020-2022 Freight Percent Change")
 
     """KMAs 2020-2022 Freight Total Change"""
     result = db.fetch_KMA_Top20_Fre_Chan_2020_2022() #store tuple from query in variable: result
     dataFrame = dHelp.tuple_to_dataframe(result, "KMAs 2020-2022 Freight Total Change") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
-    m = mapMaker.get_map()
     geodata = dHelp.tuple_to_json(result) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdBu', name="KMAs 2020-2022 Freight Total Change", nameColumn = "kma_name", isAddTooltip=True, dataColumn="KMAs 2020-2022 Freight Total Change")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdBu', name="KMAs 2020-2022 Freight Total Change", nameColumn = "kma_name", dataColumn="KMAs 2020-2022 Freight Total Change")
 
     #The next 5 lines should be the very last thing called in the main method
+    #db.close_con()
     mapMaker.add_watermark(current_directory)
-    m = mapMaker.get_map()
     mapMaker.add_layer_control()
-    db.close_con()
+    m = mapMaker.get_map()
     m.save(current_directory + "/data/output/map.html")
     
     
@@ -129,7 +126,7 @@ def main():
     
 
 
-    """
+    
     #Inserting the KMA table
     csv.field_size_limit(sys.maxsize)
     data=[]
@@ -176,18 +173,43 @@ def main():
     dataFrame = pd.concat([dataFrame.iloc[:, :2], new_col, dataFrame.iloc[:, 2:]], axis=1)
     elem = [t[3] for t in modified_list]
     dataFrame['geometry'] = elem
+    
+    
+    #fixing the geometry col and creating the geo_type col
+    geo_type_list = []
+
+    for index, row in enumerate(dataFrame['geometry']):
+        if "MULTIPOLYGON" in row:
+            geo_type_list.append("Multipolygon")
+            row = row.replace('MULTIPOLYGON', '')
+            row = row.replace('(', '[').replace(')', ']').replace(', ', '],[').replace(' ', ',').replace('[[[', '[[').replace(']]]', ']]')
+            row = "[[" + row + "]]"
+        else:
+            geo_type_list.append("Polygon")
+            row = row.replace('POLYGON', '')
+            row = row.replace('(', '[').replace(')', ']').replace(', ', '],[').replace(' ', ',').replace('[[[', '[[').replace(']]]', ']]')
+            row = "[" + row + "]"
+        
+        # Update the 'geometry' column in the DataFrame
+        dataFrame.loc[index, 'geometry'] = row
+        new_col = pd.DataFrame({'geo_type': geo_type_list})
+    print("new_col")
+    print(new_col)
+    dataFrame = pd.concat([dataFrame.iloc[:, :20], new_col, dataFrame.iloc[:, 20:]], axis=1)
+    
     dataFrame = dataFrame.sort_values(by='id', ascending=True)
     print(dataFrame)
     print(dataFrame.info())
     #db.execute_command("")
 
+    
     fullKMAData = [] #the list of tuple to be put into the KMA table
     for index, row in dataFrame.iterrows():
         processed_row = []
         for column_name, value in row.items():
             if column_name == 'id' or column_name == 'Sum of 2020 Population' or column_name == 'Sum of 2021 Population' or column_name == 'Sum of 2022 Population' or column_name == 'KMA Population Change 2020-2021' or column_name == 'KMA Population Change 2021-2022' or column_name == 'KMA Population Change 2020-2022' or column_name == 'Population Absolute Value Change 2020-2022' or column_name == 'KMA Freight Change 2020-2021' or column_name == 'KMA Freight Change 2021-2022' or column_name == 'KMA Freight Change 2020-2022' or column_name == 'Freight Absolute Value Change 2020-2022':
                 processed_row.append(int(value))
-            elif column_name == 'kma_name' or column_name == 'kma' or column_name == 'geometry':
+            elif column_name == 'kma_name' or column_name == 'kma' or column_name == 'geometry' or column_name == 'geo_type':
                 processed_row.append(str(value))
             elif column_name == 'KMA Population Percent Change 2020-2021' or column_name == "KMA Population Percent  Change 2021-2022" or column_name == 'KMA Population Percent Change 2020-2022' or column_name == 'KMA Freight Percent Change 2020-2021' or column_name == 'KMA Freight Percent Change 2021-2022' or column_name == 'KMA Freight Percent Change 2020-2022':
                 processed_row.append(float(value))
@@ -198,7 +220,7 @@ def main():
         tupNoGeo = t[:-1]
         print(*tupNoGeo)
 
-    
+    """
     db.execute_command("DROP TABLE IF EXISTS KMAs")
     
     db.execute_command('''CREATE TABLE KMAs (
@@ -222,6 +244,7 @@ def main():
                        Fre_Chan_2020_2022 INTEGER,
                        Fre_Perc_Chan_2020_2022 REAL,
                        Fre_Abs_Val_Chan_2020_2022 INTEGER,
+                       geo_type TEXT,
                        geometry TEXT
                        )''')
     
@@ -247,6 +270,7 @@ def main():
                   Fre_Chan_2020_2022,
                   Fre_Perc_Chan_2020_2022, 
                   Fre_Abs_Val_Chan_2020_2022, 
+                  geo_type,
                   geometry)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                  ''', fullKMAData)

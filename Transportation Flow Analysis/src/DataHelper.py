@@ -2,7 +2,6 @@
 TODO:
 - maybe remove geojson if it does not break anything
 """
-import geojson
 import json
 import pandas as pd
 
@@ -83,7 +82,7 @@ class DataHelper:
             "features": features
         }
         
-        geo_data = geojson.dumps(feature_collection)
+        geo_data = json.dumps(feature_collection)
         parsed_geodata = json.loads(geo_data)
         return parsed_geodata
     
