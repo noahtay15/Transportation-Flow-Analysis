@@ -155,7 +155,7 @@ class MapMaker():
             with open(directory + "/data/input/FW_watermark.png", 'rb') as wm:
                 b64_content = base64.b64encode(wm.read()).decode('utf-8')
                 
-            FloatImage('data:image/png;base64,{}'.format(b64_content), bottom=5, left=0, width=100, height=25).add_to(self.m)
+            FloatImage('data:image/png;base64,{}'.format(b64_content), bottom=50, left=25, width=100, height=25).add_to(self.m)
         except FileNotFoundError as e:
             print(f"ERROR: The FW_watermark.png was not found. {e}")
         except (PermissionError, IOError) as e:
