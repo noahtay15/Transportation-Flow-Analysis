@@ -73,6 +73,12 @@ def main():
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
     mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdYlGn', name="Top 20 KMA Population Total Change 2020-2022", nameColumn = "kma_name", dataColumn="Top 20 KMA Population Total Change 2020-2022")
     
+    """All KMAs Freight Percent Change 2020-2022"""
+    result = db.fetch_KMA_Fre_Perc_Chan_2020_2022() 
+    dataFrame = dHelp.tuple_to_dataframe(result, "All KMAs Freight Percent Change 2020-2022")
+    geodata = dHelp.tuple_to_json(result, False, True)
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='RdYlBu', name="All KMAs Freight Percent Change 2020-2022", nameColumn = "kma_name", dataColumn="All KMAs Freight Percent Change 2020-2022")
+    
     """Top 20 KMA Freight Percent Change 2020-2022"""
     result = db.fetch_KMA_Top20_Fre_Perc_Chan_2020_2022() #store tuple from query in variable: result
     dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Freight Percent Change 2020-2022") #transform id, kma_name, and the data from tuple into dataframe: dataFrame

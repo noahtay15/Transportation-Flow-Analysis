@@ -140,6 +140,19 @@ class DBManipulator():
                                LIMIT 20''')
         return res.fetchall()
 
+    def fetch_KMA_Fre_Perc_Chan_2020_2022(self):
+        """
+        Fetches the id, kma, kma_name, freight percent change from 2020-2022, 
+            and geometry for all the KMAs, sorted by Absolute Value Change in Population from 2020-2022
+        
+        Returns: 
+            list of tuples: A list of tuples of the top 20 KMAs, containing
+              the id, kma, kma_name, Fre_Perc_Chan_2020_2022, and geometry
+        """ 
+        res = self.cur.execute('''SELECT id, kma, kma_name, Fre_Perc_Chan_2020_2022, geometry FROM KMAs
+                               ORDER BY Pop_Abs_Val_Chan_2020_2022 DESC ''')
+        return res.fetchall()
+
     def fetch_KMA_Top20_Fre_Perc_Chan_2020_2022(self):
         """
         Fetches the id, kma, kma_name, freight percent change from 2020-2022, 
