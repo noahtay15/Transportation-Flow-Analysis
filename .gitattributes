@@ -1,2 +1,4 @@
 *.html linguist-detectable=false
 *.py linguist-detectable=true
+/Transportation[[:space:]]Flow[[:space:]]Analysis/data/input/database.db filter=lfs diff=lfs merge=lfs -text
+/Transportation[[:space:]]Flow[[:space:]]Analysis/data/output/map.html filter=lfs diff=lfs merge=lfs -text
