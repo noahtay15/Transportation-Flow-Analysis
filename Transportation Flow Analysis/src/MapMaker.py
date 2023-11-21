@@ -192,7 +192,7 @@ class MapMaker():
             bins = [-35, -25, -15, -5, 0, 5, 10, 15]
         elif layer_name == "Top 20 KMA Freight Total Change 2020-2022":
             bins = [-30_000, -20_000, -10_000, 0, 5_000, 10_000, 15_000]
-        elif layer_name == "All KMAs Freight Percent Change 2020-2022":
+        elif layer_name == "All KMA Freight Percent Change 2020-2022":
             bins = [-60, -40, -20, 0, 20, 40, 60]
         
         return bins
