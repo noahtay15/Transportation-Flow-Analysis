@@ -57,6 +57,11 @@ class MapMaker():
             None
         """
         
+        #handling overflow for non python3
+        if dataColumn == "Top 20 KMA Population 2020 (millions)" or dataColumn == "Top 20 KMA Population 2021 (millions)" or dataColumn == "Top 20 KMA Population 2022 (millions)":
+            dataFrame[dataColumn] = dataFrame[dataColumn] / 1_000_000
+            
+        
         layer = fol.Choropleth(
             geo_data=geodata, 
             fill_opacity=0.7, 
@@ -155,7 +160,7 @@ class MapMaker():
             with open(directory + "/data/input/FW_watermark.png", 'rb') as wm:
                 b64_content = base64.b64encode(wm.read()).decode('utf-8')
                 
-            FloatImage('data:image/png;base64,{}'.format(b64_content), bottom=50, left=25, width=100, height=25).add_to(self.m)
+            FloatImage('data:image/png;base64,{}'.format(b64_content), bottom=5, left=0, width=100, height=25).add_to(self.m)
         except FileNotFoundError as e:
             print(f"ERROR: The FW_watermark.png was not found. {e}")
         except (PermissionError, IOError) as e:
@@ -180,8 +185,8 @@ class MapMaker():
         
         bins =[]
         
-        if layer_name == "Top 20 KMA Population 2020" or layer_name == "Top 20 KMA Population 2021" or layer_name == "Top 20 KMA Population 2022":
-            bins = [1_000_000, 3_000_000, 6_000_000, 8_000_000, 10_000_000, 15_000_000]
+        if layer_name == "Top 20 KMA Population 2020 (millions)" or layer_name == "Top 20 KMA Population 2021 (millions)" or layer_name == "Top 20 KMA Population 2022 (millions)":
+            bins = [1, 3, 6, 8, 10, 15]
         elif layer_name == "All KMA 2020-2022 Population Change":
             bins = [-450_000, -300_000, -100_000, 0, 100_000, 200_000, 350_000]
         elif layer_name == "Top 20 KMA Population Percent Change 2020-2022":
