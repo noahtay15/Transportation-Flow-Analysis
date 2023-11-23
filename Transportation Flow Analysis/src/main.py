@@ -47,10 +47,10 @@ def main():
     print("Adding Top 20 KMAs Population 2020 layer...")
     section_start_time = time.time()
     result = db.fetch_KMA_Top20_2020_Population() #store tuple from query in variable: result
-    dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2020") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
+    dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2020 (millions)") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
     geodata = dHelp.tuple_to_json(result, False, True) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2020", nameColumn = "kma_name", dataColumn="Top 20 KMA Population 2020")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2020 (millions)", nameColumn = "kma_name", dataColumn="Top 20 KMA Population 2020 (millions)")
     segment_time =  time.time() - section_start_time
     print(f"Top 20 KMAs Population 2020 layer added. {segment_time} seconds")
     
@@ -58,10 +58,10 @@ def main():
     print("Adding Top 20 KMAs Population 2021 layer...")
     section_start_time = time.time()
     result = db.fetch_KMA_Top20_2021_Population() #store tuple from query in variable: result
-    dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2021") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
+    dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2021 (millions)") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
     geodata = dHelp.tuple_to_json(result, False, True) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2021", nameColumn = "kma_name", dataColumn="Top 20 KMA Population 2021")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2021 (millions)", nameColumn = "kma_name", dataColumn="Top 20 KMA Population 2021 (millions)")
     segment_time =  time.time() - section_start_time 
     print(f"Top 20 KMAs Population 2021 layer added. {segment_time} seconds")
     
@@ -69,10 +69,10 @@ def main():
     print("Adding Top 20 KMAs Population 2022 layer...")
     section_start_time = time.time()
     result = db.fetch_KMA_Top20_2022_Population() #store tuple from query in variable: result
-    dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2022") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
+    dataFrame = dHelp.tuple_to_dataframe(result, "Top 20 KMA Population 2022 (millions)") #transform id, kma_name, and the data from tuple into dataframe: dataFrame
     geodata = dHelp.tuple_to_json(result, False, True) #transform id, kma_name, geometry from tuple into json: geodata
     #pass dataFrame into dataFrame, geodata into geodata, preferred color scheme into fillColor, the layer name into name, "kma_name" into nameColumn, True into isAddToolTip if this is not the County Lines or KMA Lines layer, the same string as name into dataColumn
-    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2022", nameColumn = "kma_name", dataColumn="Top 20 KMA Population 2022")
+    mapMaker.add_layer(dataFrame=dataFrame, geodata=geodata, fillColor='YlOrRd', name="Top 20 KMA Population 2022 (millions)", nameColumn = "kma_name", dataColumn="Top 20 KMA Population 2022 (millions)")
     segment_time =  time.time() - section_start_time
     print(f"Top 20 KMAs Population 2022 layer added. {segment_time} seconds")
     
@@ -141,20 +141,31 @@ def main():
     segment_time =  time.time() - section_start_time 
     print(f"Top 20 KMA Freight Total Change 2020-2022 layer added. {segment_time} seconds")
 
-    #The next lines should be the very last thing called in the main method
+
     db.close_con()
     mapMaker.add_watermark(current_directory)
     mapMaker.add_layer_control()
     m = mapMaker.get_map()
+    
     print("Saving file...")
     section_start_time = time.time()
-    m.save(current_directory + "/data/output/map.html")
+    m.save(current_directory + "/map.html")
     segment_time =  time.time() - section_start_time
     print(f"File saved. {segment_time} seconds")
-    print("The map file can be found in " + current_directory + "/data/output/map.html")
-    segment_time = time.time() - start_time
-    print(f"Total run time: {segment_time} seconds")
     
+    segment_time = time.time() - start_time
+    print("The file can be found in " + current_directory + "/map.html")
+    
+    if os.name == "nt": #If the program is running on the windows operating system
+        try:
+            print("Opening the map file...")
+            os.startfile(current_directory + "/map.html")
+        except FileNotFoundError as e:
+            print("The file cannot be found. {e}")
+            print("If it exists, the map file can be found in " + current_directory + "/map.html")
+        except Exception as e:
+            print("Unexpected error. {e}")
+    print(f"Total run time: {segment_time} seconds")
     
 
 
