@@ -1,6 +1,7 @@
 """
 TODO:
 """
+import os
 import sqlite3 as sql
 
 class DBManipulator():
@@ -12,9 +13,12 @@ class DBManipulator():
         Args:
             directory (str): The working directory path
         """
-        
-        self.con = sql.connect(directory + "/data/input/database.db")
-        self.cur = self.con.cursor()
+        if os.path.exists(directory + "/data/input/database.db"):
+            self.con = sql.connect(directory + "/data/input/database.db")
+            self.cur = self.con.cursor()
+        else:
+            raise FileNotFoundError("ERROR: The database file was not found. Make sure you have the database file in data\input.")
+            
         
     def execute_command(self, command):
         
